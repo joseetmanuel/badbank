@@ -3,9 +3,11 @@ import React, { useState } from "react";
 
 const Withdraw = () => {
   let ctx = JSON.parse(sessionStorage.getItem("users"));
-  if (!ctx) ctx = [];
+  let saldo_tmp = 0;
   const [id, setId] = useState(0);
-  const [saldo_final, setSaldo_final] = useState("Saldo: $ " + ctx[id].saldo);
+  if (!ctx) ctx = [];
+  else saldo_tmp = ctx[id].saldo;
+  const [saldo_final, setSaldo_final] = useState("Saldo: $ " + saldo_tmp);
   const [status, setStatus] = useState("");
   const [cta, setCta] = useState(ctx[id]);
   const [retiro, setRetiro] = useState(0);
@@ -34,10 +36,12 @@ const Withdraw = () => {
   };
 
   const validate = (field) => {
-    if (field === "") setStatus("El retiro debe ser número.");
+    if (!cta) setStatus("Cargue primero una cuenta.");
+    else if (field === "") setStatus("El retiro debe ser número.");
     else if (Number(field) < 0) setStatus("No se permiten retiros negativos.");
     else if (Number(field) === 0) setStatus("El retiro debe ser mayor a 0.");
-    else if (Number(field) > cta.saldo) setStatus("El retiro NO puede ser mayor al saldo.");
+    else if (Number(field) > cta.saldo)
+      setStatus("El retiro NO puede ser mayor al saldo.");
     else setStatus("");
   };
 
@@ -75,7 +79,7 @@ const Withdraw = () => {
           <br />
           <button
             type="submit"
-            disabled={!status && retiro > 0 ? false : true}
+            disabled={!status && retiro > 0 && cta ? false : true}
             className="btn btn-light"
             onClick={handleCreate}
           >

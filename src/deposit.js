@@ -3,9 +3,11 @@ import React, { useState } from "react";
 
 const Deposit = () => {
   let ctx = JSON.parse(sessionStorage.getItem("users"));
-  if (!ctx) ctx = [];
+  let saldo_tmp = 0;
   const [id, setId] = useState(0);
-  const [saldo_final, setSaldo_final] = useState("Saldo: $ " + ctx[id].saldo);
+  if (!ctx) ctx = [];
+  else saldo_tmp = ctx[id].saldo
+  const [saldo_final, setSaldo_final] = useState("Saldo: $ " + saldo_tmp);
   const [status, setStatus] = useState("");
   const [cta, setCta] = useState(ctx[id]);
   const [deposito, setDeposito] = useState(0);
@@ -34,7 +36,8 @@ const Deposit = () => {
   };
 
   const validate = (field) => {
-    if (field === "") setStatus("El deposito debe ser número.");
+    if (!cta) setStatus("Cargue primero una cuenta.");
+    else if (field === "") setStatus("El deposito debe ser número.");
     else if (Number(field) < 0)
       setStatus("No se permiten depósitos negativos.");
     else if (Number(field) === 0) setStatus("El deposito debe ser mayor a 0.");
@@ -75,7 +78,7 @@ const Deposit = () => {
           <br />
           <button
             type="submit"
-            disabled={!status && deposito > 0 ? false : true}
+            disabled={!status && deposito > 0 && cta ? false : true}
             className="btn btn-light"
             onClick={handleCreate}
           >
