@@ -13,10 +13,27 @@ const AllData = () => {
   return (
     <div>
       {ctx.map((u) => (
-        <Card key = {u.id}
-          header= {'Cuenta no. '+ (u.id + 1)} 
+        <Card
+          key={u.id}
+          header={"Cuenta no. " + (u.id + 1)}
           title={u.name}
-          body={<p>Email: {u.email}</p>}
+          body={
+            <div>
+              <p>Email: {u.email}</p>
+              {u.mov && (
+                <div>
+                  <p>Movimientos:</p>
+                  <ul className="list-group">
+                    {u.mov.map((m) => (
+                      <li key={m.id} className="list-group-item d-flex">
+                        {m.tipo} : $ {m.monto}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          }
           status={"Saldo: $ " + u.saldo}
           color="green"
         />

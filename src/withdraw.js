@@ -27,7 +27,9 @@ const Withdraw = () => {
   const handleCreate = () => {
     if (retiro <= 0) return;
     const saldo = Number(cta.saldo) - Number(retiro);
-    const new_cta = { ...cta, saldo };
+    let mov = cta.mov?cta.mov:[];
+    mov.push({tipo:"Retiro", monto: retiro});
+    const new_cta = { ...cta, saldo: saldo, mov };
     setCta(new_cta);
     setSaldo_final("Saldo: $ " + new_cta.saldo);
     ctx[id] = new_cta;

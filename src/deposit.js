@@ -27,7 +27,9 @@ const Deposit = () => {
   const handleCreate = () => {
     if (deposito <= 0) return;
     const saldo = Number(cta.saldo) + Number(deposito);
-    const new_cta = { ...cta, saldo };
+    let mov = cta.mov?cta.mov:[];
+    mov.push({tipo:"Depósito", monto: deposito});
+    const new_cta = { ...cta, saldo: saldo, mov };
     setCta(new_cta);
     setSaldo_final("Saldo: $ " + new_cta.saldo);
     ctx[id] = new_cta;
