@@ -1,10 +1,10 @@
 import Card from "./card";
-import React, { useState, useContext } from "react";
-import { UserContext } from "./context";
+import React, { useState } from "react";
 
 const CreateAccount = () => {
-  const ctx = useContext(UserContext);
-  
+  let ctx = JSON.parse(sessionStorage.getItem("users"));
+  if (!ctx) ctx = [];
+
   const [status, setStatus] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -19,7 +19,17 @@ const CreateAccount = () => {
     if (!validate(name, "nombre")) return;
     if (!validate(email, "email")) return;
     if (!validate(password, "password")) return;
-    ctx.users.push({ name, email, password, balance: 100 });
+
+    let user = {
+      id: ctx.length ? ctx.length : 0,
+      name: name,
+      email: email,
+      password: password,
+      saldo: 0
+    };
+    ctx = [...ctx, user];
+    console.log(ctx);
+    sessionStorage.setItem("users", JSON.stringify(ctx));
 
     setStatus("Cuenta creada!");
     setTimeout(() => setStatus(""), 3000);
@@ -39,17 +49,17 @@ const CreateAccount = () => {
 
   const validate = (field, label) => {
     let isValid = false;
-    if (label == "email") {
+    if (label === "email") {
       isValid = String(field)
         .toLowerCase()
         .match(/\S+@\S+\.\S+/);
       setStatus(isValid ? "" : "El email no es valido");
     }
-    if (label == "password") {
+    if (label === "password") {
       isValid = field.length >= 6;
       setStatus(isValid ? "" : "El password es muy corto");
     }
-    if (label == "nombre") {
+    if (label === "nombre") {
       isValid = field.length >= 2;
       setStatus(isValid ? "" : "El nombre es muy corto");
     }
@@ -60,7 +70,7 @@ const CreateAccount = () => {
     <Card
       header="Crea tu cuenta"
       status={status}
-      color={status == "Cuenta creada!" ? "green" : "red"}
+      color={status === "Cuenta creada!" ? "green" : "red"}
       body={
         <>
           Nombre
@@ -120,7 +130,7 @@ const CreateAccount = () => {
             className="btn btn-light"
             onClick={handleCreate}
           >
-            Create Account
+           Crear cuenta
           </button>
         </>
       }
